@@ -151,10 +151,15 @@ export function updateMarket(
 
     market.accrualBlockNumber = contract.accrualBlockNumber().toI32()
     market.blockTimestamp = blockTimestamp
-    market.totalSupply = contract
-      .totalSupply()
-      .toBigDecimal()
-      .div(vTokenDecimalsBD)
+    let totalSupply = contract.try_totalSupply()
+    if (!totalSupply.reverted) {
+      market.totalSupply = totalSupply.value.toBigDecimal().div(vTokenDecimalsBD)
+    } else {
+      log.error('Contract call reverted! call_name: {}, market_name: {}', [
+        'try_totalSupply',
+        market.name,
+      ])
+    }
 
     /* Exchange rate explanation
        In Practice
@@ -166,53 +171,91 @@ export function updateMarket(
         - Must multiply by vtokenDecimals, 10^8
         - Must div by mantissa, 10^18
      */
-    market.exchangeRate = contract
-      .exchangeRateStored()
-      .toBigDecimal()
-      .div(exponentToBigDecimal(market.underlyingDecimals))
-      .times(vTokenDecimalsBD)
-      .div(mantissaFactorBD)
-      .truncate(mantissaFactor)
-    market.borrowIndex = contract
-      .borrowIndex()
-      .toBigDecimal()
-      .div(mantissaFactorBD)
-      .truncate(mantissaFactor)
-
-    market.reserves = contract
-      .totalReserves()
-      .toBigDecimal()
-      .div(exponentToBigDecimal(market.underlyingDecimals))
-      .truncate(market.underlyingDecimals)
-    market.totalBorrows = contract
-      .totalBorrows()
-      .toBigDecimal()
-      .div(exponentToBigDecimal(market.underlyingDecimals))
-      .truncate(market.underlyingDecimals)
-    market.cash = contract
-      .getCash()
-      .toBigDecimal()
-      .div(exponentToBigDecimal(market.underlyingDecimals))
-      .truncate(market.underlyingDecimals)
-
-    // Must convert to BigDecimal, and remove 10^18 that is used for Exp in Venus Solidity
-    market.borrowRate = contract
-      .borrowRatePerBlock()
-      .toBigDecimal()
-      .div(mantissaFactorBD)
-      .truncate(mantissaFactor)
-
-    // This fails on only the first call to cZRX. It is unclear why, but otherwise it works.
-    // So we handle it like this.
-    let supplyRatePerBlock = contract.try_supplyRatePerBlock()
-    if (supplyRatePerBlock.reverted) {
-      log.info('***CALL FAILED*** : vBEP20 supplyRatePerBlock() reverted', [])
-      market.supplyRate = zeroBD
+    let exchangeRateStored = contract.try_exchangeRateStored()
+    if (!exchangeRateStored.reverted) {
+      market.exchangeRate = exchangeRateStored.value
+        .toBigDecimal()
+        .div(exponentToBigDecimal(market.underlyingDecimals))
+        .times(vTokenDecimalsBD)
+        .div(mantissaFactorBD)
+        .truncate(mantissaFactor)
     } else {
+      log.error('Contract call reverted! call_name: {}, market_name: {}', [
+        'try_exchangeRateStored',
+        market.name,
+      ])
+    }
+    let borrowIndex = contract.try_borrowIndex()
+    if (!borrowIndex.reverted) {
+      market.borrowIndex = borrowIndex.value
+        .toBigDecimal()
+        .div(mantissaFactorBD)
+        .truncate(mantissaFactor)
+    } else {
+      log.error('Contract call reverted! call_name: {}, market_name: {}', [
+        'try_borrowIndex',
+        market.name,
+      ])
+    }
+    let totalReserves = contract.try_totalReserves()
+    if (!totalReserves.reverted) {
+      market.reserves = totalReserves.value
+        .toBigDecimal()
+        .div(exponentToBigDecimal(market.underlyingDecimals))
+        .truncate(market.underlyingDecimals)
+    } else {
+      log.error('Contract call reverted! call_name: {}, market_name: {}', [
+        'try_totalReserves',
+        market.name,
+      ])
+    }
+    let totalBorrows = contract.try_totalBorrows()
+    if (!totalBorrows.reverted) {
+      market.totalBorrows = totalBorrows.value
+        .toBigDecimal()
+        .div(exponentToBigDecimal(market.underlyingDecimals))
+        .truncate(market.underlyingDecimals)
+    } else {
+      log.error('Contract call reverted! call_name: {}, market_name: {}', [
+        'try_totalBorrows',
+        market.name,
+      ])
+    }
+    let getCash = contract.try_getCash()
+    if (!getCash.reverted) {
+      market.cash = getCash.value
+        .toBigDecimal()
+        .div(exponentToBigDecimal(market.underlyingDecimals))
+        .truncate(market.underlyingDecimals)
+    } else {
+      log.error('Contract call reverted! call_name: {}, market_name: {}', [
+        'try_getCash',
+        market.name,
+      ])
+    }
+    let borrowRatePerBlock = contract.try_borrowRatePerBlock()
+    if (!borrowRatePerBlock.reverted) {
+      market.borrowRate = borrowRatePerBlock.value
+        .toBigDecimal()
+        .div(mantissaFactorBD)
+        .truncate(mantissaFactor)
+    } else {
+      log.error('Contract call reverted! call_name: {}, market_name: {}', [
+        'try_borrowRatePerBlock',
+        market.name,
+      ])
+    }
+    let supplyRatePerBlock = contract.try_supplyRatePerBlock()
+    if (!supplyRatePerBlock.reverted) {
       market.supplyRate = supplyRatePerBlock.value
         .toBigDecimal()
         .div(mantissaFactorBD)
         .truncate(mantissaFactor)
+    } else {
+      log.error('Contract call reverted! call_name: {}, market_name: {}', [
+        'try_supplyRatePerBlock',
+        market.name,
+      ])
     }
     market.save()
   }
