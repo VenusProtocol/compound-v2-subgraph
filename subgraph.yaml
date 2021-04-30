@@ -72,10 +72,10 @@ templates:
         - name: BEP20
           file: ./abis/bep20.json
       eventHandlers:
-        - event: Mint(address,uint256,uint256)
-          handler: handleMint
-        - event: Redeem(address,uint256,uint256)
-          handler: handleRedeem
+        # - event: Mint(address,uint256,uint256)
+        #   handler: handleMint
+        # - event: Redeem(address,uint256,uint256)
+        #   handler: handleRedeem
         - event: Borrow(address,uint256,uint256,uint256)
           handler: handleBorrow
         - event: RepayBorrow(address,address,uint256,uint256,uint256)

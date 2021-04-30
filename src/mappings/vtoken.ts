@@ -44,30 +44,28 @@ import {
  *    No need to update vTokenBalance, handleTransfer() will
  */
 export function handleMint(event: Mint): void {
-  let market = Market.load(event.address.toHexString())
-  let mintID = event.transaction.hash
-    .toHexString()
-    .concat('-')
-    .concat(event.transactionLogIndex.toString())
-
-  let vTokenAmount = event.params.mintTokens
-    .toBigDecimal()
-    .div(vTokenDecimalsBD)
-    .truncate(vTokenDecimals)
-  let underlyingAmount = event.params.mintAmount
-    .toBigDecimal()
-    .div(exponentToBigDecimal(market.underlyingDecimals))
-    .truncate(market.underlyingDecimals)
-
-  let mint = new MintEvent(mintID)
-  mint.amount = vTokenAmount
-  mint.to = event.params.minter
-  mint.from = event.address
-  mint.blockNumber = event.block.number.toI32()
-  mint.blockTime = event.block.timestamp.toI32()
-  mint.vTokenSymbol = market.symbol
-  mint.underlyingAmount = underlyingAmount
-  mint.save()
+  // let market = Market.load(event.address.toHexString())
+  // let mintID = event.transaction.hash
+  //   .toHexString()
+  //   .concat('-')
+  //   .concat(event.transactionLogIndex.toString())
+  // let vTokenAmount = event.params.mintTokens
+  //   .toBigDecimal()
+  //   .div(vTokenDecimalsBD)
+  //   .truncate(vTokenDecimals)
+  // let underlyingAmount = event.params.mintAmount
+  //   .toBigDecimal()
+  //   .div(exponentToBigDecimal(market.underlyingDecimals))
+  //   .truncate(market.underlyingDecimals)
+  // let mint = new MintEvent(mintID)
+  // mint.amount = vTokenAmount
+  // mint.to = event.params.minter
+  // mint.from = event.address
+  // mint.blockNumber = event.block.number.toI32()
+  // mint.blockTime = event.block.timestamp.toI32()
+  // mint.vTokenSymbol = market.symbol
+  // mint.underlyingAmount = underlyingAmount
+  // mint.save()
 }
 
 /*  Account supplies vTokens into market and receives underlying asset in exchange
@@ -83,30 +81,28 @@ export function handleMint(event: Mint): void {
  *    No need to update vTokenBalance, handleTransfer() will
  */
 export function handleRedeem(event: Redeem): void {
-  let market = Market.load(event.address.toHexString())
-  let redeemID = event.transaction.hash
-    .toHexString()
-    .concat('-')
-    .concat(event.transactionLogIndex.toString())
-
-  let vTokenAmount = event.params.redeemTokens
-    .toBigDecimal()
-    .div(vTokenDecimalsBD)
-    .truncate(vTokenDecimals)
-  let underlyingAmount = event.params.redeemAmount
-    .toBigDecimal()
-    .div(exponentToBigDecimal(market.underlyingDecimals))
-    .truncate(market.underlyingDecimals)
-
-  let redeem = new RedeemEvent(redeemID)
-  redeem.amount = vTokenAmount
-  redeem.to = event.address
-  redeem.from = event.params.redeemer
-  redeem.blockNumber = event.block.number.toI32()
-  redeem.blockTime = event.block.timestamp.toI32()
-  redeem.vTokenSymbol = market.symbol
-  redeem.underlyingAmount = underlyingAmount
-  redeem.save()
+  // let market = Market.load(event.address.toHexString())
+  // let redeemID = event.transaction.hash
+  //   .toHexString()
+  //   .concat('-')
+  //   .concat(event.transactionLogIndex.toString())
+  // let vTokenAmount = event.params.redeemTokens
+  //   .toBigDecimal()
+  //   .div(vTokenDecimalsBD)
+  //   .truncate(vTokenDecimals)
+  // let underlyingAmount = event.params.redeemAmount
+  //   .toBigDecimal()
+  //   .div(exponentToBigDecimal(market.underlyingDecimals))
+  //   .truncate(market.underlyingDecimals)
+  // let redeem = new RedeemEvent(redeemID)
+  // redeem.amount = vTokenAmount
+  // redeem.to = event.address
+  // redeem.from = event.params.redeemer
+  // redeem.blockNumber = event.block.number.toI32()
+  // redeem.blockTime = event.block.timestamp.toI32()
+  // redeem.vTokenSymbol = market.symbol
+  // redeem.underlyingAmount = underlyingAmount
+  // redeem.save()
 }
 
 /* Borrow assets from the protocol. All values either BNB or BEP20
@@ -155,29 +151,29 @@ export function handleBorrow(event: Borrow): void {
   )
   vTokenStats.save()
 
-  let borrowID = event.transaction.hash
-    .toHexString()
-    .concat('-')
-    .concat(event.transactionLogIndex.toString())
+  // let borrowID = event.transaction.hash
+  //   .toHexString()
+  //   .concat('-')
+  //   .concat(event.transactionLogIndex.toString())
 
-  let borrowAmount = event.params.borrowAmount
-    .toBigDecimal()
-    .div(exponentToBigDecimal(market.underlyingDecimals))
-    .truncate(market.underlyingDecimals)
+  // let borrowAmount = event.params.borrowAmount
+  //   .toBigDecimal()
+  //   .div(exponentToBigDecimal(market.underlyingDecimals))
+  //   .truncate(market.underlyingDecimals)
 
-  let accountBorrows = event.params.accountBorrows
-    .toBigDecimal()
-    .div(exponentToBigDecimal(market.underlyingDecimals))
-    .truncate(market.underlyingDecimals)
+  // let accountBorrows = event.params.accountBorrows
+  //   .toBigDecimal()
+  //   .div(exponentToBigDecimal(market.underlyingDecimals))
+  //   .truncate(market.underlyingDecimals)
 
-  let borrow = new BorrowEvent(borrowID)
-  borrow.amount = borrowAmount
-  borrow.accountBorrows = accountBorrows
-  borrow.borrower = event.params.borrower
-  borrow.blockNumber = event.block.number.toI32()
-  borrow.blockTime = event.block.timestamp.toI32()
-  borrow.underlyingSymbol = market.underlyingSymbol
-  borrow.save()
+  // let borrow = new BorrowEvent(borrowID)
+  // borrow.amount = borrowAmount
+  // borrow.accountBorrows = accountBorrows
+  // borrow.borrower = event.params.borrower
+  // borrow.blockNumber = event.block.number.toI32()
+  // borrow.blockTime = event.block.timestamp.toI32()
+  // borrow.underlyingSymbol = market.underlyingSymbol
+  // borrow.save()
 }
 
 /* Repay some amount borrowed. Anyone can repay anyones balance
@@ -229,30 +225,30 @@ export function handleRepayBorrow(event: RepayBorrow): void {
   )
   vTokenStats.save()
 
-  let repayID = event.transaction.hash
-    .toHexString()
-    .concat('-')
-    .concat(event.transactionLogIndex.toString())
+  // let repayID = event.transaction.hash
+  //   .toHexString()
+  //   .concat('-')
+  //   .concat(event.transactionLogIndex.toString())
 
-  let repayAmount = event.params.repayAmount
-    .toBigDecimal()
-    .div(exponentToBigDecimal(market.underlyingDecimals))
-    .truncate(market.underlyingDecimals)
+  // let repayAmount = event.params.repayAmount
+  //   .toBigDecimal()
+  //   .div(exponentToBigDecimal(market.underlyingDecimals))
+  //   .truncate(market.underlyingDecimals)
 
-  let accountBorrows = event.params.accountBorrows
-    .toBigDecimal()
-    .div(exponentToBigDecimal(market.underlyingDecimals))
-    .truncate(market.underlyingDecimals)
+  // let accountBorrows = event.params.accountBorrows
+  //   .toBigDecimal()
+  //   .div(exponentToBigDecimal(market.underlyingDecimals))
+  //   .truncate(market.underlyingDecimals)
 
-  let repay = new RepayEvent(repayID)
-  repay.amount = repayAmount
-  repay.accountBorrows = accountBorrows
-  repay.borrower = event.params.borrower
-  repay.blockNumber = event.block.number.toI32()
-  repay.blockTime = event.block.timestamp.toI32()
-  repay.underlyingSymbol = market.underlyingSymbol
-  repay.payer = event.params.payer
-  repay.save()
+  // let repay = new RepayEvent(repayID)
+  // repay.amount = repayAmount
+  // repay.accountBorrows = accountBorrows
+  // repay.borrower = event.params.borrower
+  // repay.blockNumber = event.block.number.toI32()
+  // repay.blockTime = event.block.timestamp.toI32()
+  // repay.underlyingSymbol = market.underlyingSymbol
+  // repay.payer = event.params.payer
+  // repay.save()
 }
 
 /*
