@@ -5,7 +5,9 @@
   "license": "MIT",
   "scripts": {
     "codegen": "graph codegen --output-dir src/types/",
-    "build": "graph build --ipfs https://api.staging.thegraph.com/ipfs/ ",
+    "build-local": "graph build --ipfs http://localhost:5001",
+    "build": "graph build --ipfs https://api.thegraph.com/ipfs/",
+    "build-staging": "graph build --ipfs https://api.staging.thegraph.com/ipfs/",
     "create-local": "graph create venusprotocol/venus-subgraph --node http://127.0.0.1:8020",
     "deploy-local": "graph deploy venusprotocol/venus-subgraph --debug --ipfs http://localhost:5001 --node http://127.0.0.1:8020/",
     "deploy": "graph deploy venusprotocol/venus-subgraph --debug --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
