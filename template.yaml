@@ -6,11 +6,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: Comptroller
-    network: bsc
+    network: {{ network }}
     source:
-      address: "0xfd36e2c2a6789db23113685031d7f16329158384"
+      address: "{{ address }}"
       abi: Comptroller
-      startBlock: 2470000
+      startBlock: {{ startBlock }}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -48,7 +48,7 @@ dataSources:
 templates:
   - name: VToken
     kind: ethereum/contract
-    network: bsc
+    network: {{ network }}
     source:
       abi: VToken
     mapping:
