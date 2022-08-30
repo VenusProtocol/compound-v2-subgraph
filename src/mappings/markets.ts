@@ -189,13 +189,20 @@ export function updateMarket(
         - Must multiply by vtokenDecimals, 10^8
         - Must div by mantissa, 10^18
      */
-    market.exchangeRate = contract
-      .exchangeRateStored()
-      .toBigDecimal()
-      .div(exponentToBigDecimal(market.underlyingDecimals))
-      .times(vTokenDecimalsBD)
-      .div(mantissaFactorBD)
-      .truncate(mantissaFactor)
+    // This fails on only the first call to cZRX. It is unclear why, but otherwise it works.
+    // So we handle it like this.
+    let exchangeRateStored = contract.try_exchangeRateStored()
+    if (exchangeRateStored.reverted) {
+      log.error('***CALL FAILED*** : vBEP20 supplyRatePerBlock() reverted', [])
+      market.exchangeRate = zeroBD
+    } else {
+      market.exchangeRate = exchangeRateStored.value
+        .toBigDecimal()
+        .div(exponentToBigDecimal(market.underlyingDecimals))
+        .times(vTokenDecimalsBD)
+        .div(mantissaFactorBD)
+        .truncate(mantissaFactor)
+    }
     market.borrowIndex = contract
       .borrowIndex()
       .toBigDecimal()
