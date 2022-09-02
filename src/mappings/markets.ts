@@ -226,11 +226,16 @@ export function updateMarket(
       .truncate(market.underlyingDecimals)
 
     // Must convert to BigDecimal, and remove 10^18 that is used for Exp in Venus Solidity
-    market.borrowRate = contract
-      .borrowRatePerBlock()
-      .toBigDecimal()
-      .div(mantissaFactorBD)
-      .truncate(mantissaFactor)
+    let borrowRatePerBlock = contract.try_borrowRatePerBlock()
+    if (borrowRatePerBlock.reverted) {
+      log.error('***CALL FAILED*** : vBEP20 supplyRatePerBlock() reverted', [])
+      market.exchangeRate = zeroBD
+    } else {
+      market.borrowRate = borrowRatePerBlock.value
+        .toBigDecimal()
+        .div(mantissaFactorBD)
+        .truncate(mantissaFactor)
+    }
 
     // This fails on only the first call to cZRX. It is unclear why, but otherwise it works.
     // So we handle it like this.
