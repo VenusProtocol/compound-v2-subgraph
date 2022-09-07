@@ -1,5 +1,9 @@
 # Venus-Subgraph
 
+This repo has been archived. All venus subgraphs are now managed in a monorepo. The code for this subgraph has moved [here](https://github.com/VenusProtocol/subgraphs/tree/master/subgraphs/venus).
+
+---
+
 [Venus](https://venus.io/) is an open-source protocol for algorithmic, efficient Money Markets on the Binance Smart Chain. This Subgraph ingests the contracts of Venus protocol.
 
 ## Networks and Performance
